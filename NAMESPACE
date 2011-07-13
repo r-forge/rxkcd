@@ -1,2 +1,0 @@
-if(getRversion() >= "2.5.0") importFrom("utils", "read.csv")
-export(getXKCD, searchXKCD)
