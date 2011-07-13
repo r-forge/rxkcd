@@ -1,0 +1,10 @@
+COPYRIGHT STATUS
+----------------
+
+All R code is subject to the GNU General Public License, Version 2. See
+the file COPYING for the exact conditions under which you may
+redistribute it.
+
+The copyright for the XKCD web comic is stated at http://xkcd.com/license.html 
+
+Thanks to Achim Zeileis from whom I 'borrowed' some fortunes package code!
