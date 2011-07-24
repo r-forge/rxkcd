@@ -60,11 +60,15 @@ getXKCD <- function(which="current", display=TRUE, saveImg=FALSE){
 	} 
 	else xkcd <- fromJSON(paste("http://xkcd.com/",which,"/info.0.json",sep=""))
 	if(grepl(".png",xkcd$img)){
-		download.file(url=xkcd$img, destfile=paste(tempdir(),"xkcd.png",sep="/"))
+		# download.file(url=xkcd$img, destfile=paste(tempdir(),"xkcd.png",sep="/"))
+		# xkcd.img <- readPNG( paste(tempdir(),"xkcd.png",sep="/") 
+		download.file(url=xkcd$img, quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.png",sep="/"))
 		xkcd.img <- readPNG( paste(tempdir(),"xkcd.png",sep="/") )
 	}
 	else if(grepl(".jpg",xkcd$img)){
-		download.file(url=xkcd$img, destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
+		# download.file(url=xkcd$img, destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
+		# xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
+		download.file(url=xkcd$img, quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
 		xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
 	} else stop("Unsupported image format!")
 	max.dim = max(dim(xkcd.img))
