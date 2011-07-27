@@ -5,11 +5,12 @@
 This function fetches a XKCD comic strip (randomly or by number) and displays it on screen.
 }
 \usage{
-getXKCD(which = "current", display = TRUE, saveImg = FALSE)
+getXKCD(which = "current", display = TRUE, html=FALSE, saveImg=FALSE)
 }
 \arguments{
   \item{which}{ string: either "current" or "random"; or a number indicating the specific strip.}
   \item{display}{ logical; TRUE (default) if you like to display the strip on the screen}
+  \item{html}{ logical; FALSE (default) if you like to open the XKCD web page for the selected comic in your browser}
   \item{saveImg}{logical; TRUE if you want to save image in the current directory. Default FALSE}
 }
 \details{
