@@ -48,20 +48,18 @@ getXKCD <- function(which="current", display=TRUE, html=FALSE, saveImg=FALSE) {
 	if(html) browseURL( paste("http://xkcd.com/", xkcd$num,sep="") ) 
 	else {
 		if(grepl(".png",xkcd$img)){
-			# download.file(url=xkcd$img, destfile=paste(tempdir(),"xkcd.png",sep="/"))
-			# xkcd.img <- readPNG( paste(tempdir(),"xkcd.png",sep="/") 
 			download.file(url=xkcd$img, quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.png",sep="/"))
 			xkcd.img <- readPNG( paste(tempdir(),"xkcd.png",sep="/") )
 		}
 		else if(grepl(".jpg",xkcd$img)){
-			# download.file(url=xkcd$img, destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
-			# xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
 			download.file(url=xkcd$img, quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
 			xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
 		} else stop("Unsupported image format!")
-		max.dim = max(dim(xkcd.img))
-		plot(1:max.dim, type="n", axes=F, xaxt="n",yaxt="n",xlab="",ylab="")
-		if(display) rasterImage(xkcd.img, xleft=0, ybottom=0, xright=dim(xkcd.img)[[2]], ytop=dim(xkcd.img)[[1]])
+		if(display) {
+			max.dim = max(dim(xkcd.img))
+			plot(1:max.dim, type="n", axes=F, xaxt="n",yaxt="n",xlab="",ylab="")
+			rasterImage(xkcd.img, xleft=0, ybottom=0, xright=dim(xkcd.img)[[2]], ytop=dim(xkcd.img)[[1]])
+		}
 		if(saveImg) writePNG( image=xkcd.img, target=paste(xkcd$title,".png",sep="") )
 	}
 	return(xkcd)

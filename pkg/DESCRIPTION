@@ -1,8 +1,8 @@
 Package: RXKCD
 Type: Package
 Title: Get XKCD comic from R
-Version: 1.3
-Date: 2011-07-27
+Version: 1.4
+Date: 2011-07-31
 Author: Paolo Sonego <paolo.sonego@gmail.com>
 Maintainer: Paolo Sonego <paolo.sonego@gmail.com>
 Description: This package allows the visualization of your favorite XKCD comic strip directly from R.
