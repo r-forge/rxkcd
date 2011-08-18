@@ -28,8 +28,8 @@ searchXKCD<- function(which="significant", xkcd.data=NULL){
 		xkcd.data <- get("xkcd.data", envir = xkcd.env)
 		if(is.character(which)) {
 		  if(length(which) > 1) which <- sample(which)
-		which.tt <- grep(which, xkcd.data$title, ignore.case = TRUE, useBytes = TRUE)
-		which.tr <- grep(which, xkcd.data$transcript, ignore.case =TRUE, useBytes = TRUE)
+		which.tt <- grep(which, xkcd.data["title"][[1]], ignore.case = TRUE, useBytes = TRUE)
+		which.tr <- grep(which, xkcd.data["transcript"][[1]], ignore.case =TRUE, useBytes = TRUE)
 		which.all <- unique(c(which.tr, which.tt))
 		} 
   out <- data.frame(num=xkcd.data[which.all, "num"], title=xkcd.data[which.all, "title"])
@@ -40,19 +40,19 @@ getXKCD <- function(which="current", display=TRUE, html=FALSE, saveImg=FALSE) {
 	if (which=="current") xkcd <- fromJSON("http://xkcd.com/info.0.json")
 	else if(which=="random"|which=="") {
 		current <- fromJSON("http://xkcd.com/info.0.json")
-		num = sample(1:current$num, 1)
+		num <- sample(1:current["num"][[1]], 1)
 		xkcd <- fromJSON(paste("http://xkcd.com/",num,"/info.0.json",sep=""))
 	} 
 	else xkcd <- fromJSON(paste("http://xkcd.com/",which,"/info.0.json",sep=""))
 	
-	if(html) browseURL( paste("http://xkcd.com/", xkcd$num,sep="") ) 
+	if(html) browseURL( paste("http://xkcd.com/", as.numeric(xkcd["num"][[1]]),sep="") ) 
 	else {
-		if(grepl(".png",xkcd$img)){
-			download.file(url=xkcd$img, quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.png",sep="/"))
+		if(grepl(".png",xkcd["img"][[1]])){
+			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.png",sep="/"))
 			xkcd.img <- readPNG( paste(tempdir(),"xkcd.png",sep="/") )
 		}
-		else if(grepl(".jpg",xkcd$img)){
-			download.file(url=xkcd$img, quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
+		else if(grepl(".jpg",xkcd["img"][[1]])){
+			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
 			xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
 		} else stop("Unsupported image format!")
 		if(display) {
