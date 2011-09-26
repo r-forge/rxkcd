@@ -5,7 +5,7 @@
 This function fetches a XKCD comic strip (randomly or by number) and displays it on screen.
 }
 \usage{
-getXKCD(which = "current", display = TRUE, html=FALSE, saveImg=FALSE)
+getXKCD(which = "current", display = TRUE, html = FALSE, saveImg = FALSE)
 }
 \arguments{
   \item{which}{ string: either "current" or "random"; or a number indicating the specific strip.}
@@ -17,12 +17,12 @@ getXKCD(which = "current", display = TRUE, html=FALSE, saveImg=FALSE)
 }
 \value{
 a list containing the following fields:
-\item{img}{The URL of the XKCD comic strip image (png)}
-\item{title}{The title of the XKCD comic strip}
+\item{img}{URL of the XKCD comic strip image (png)}
+\item{title}{Title of the XKCD comic strip}
 \item{month}{}
-\item{num}{The number of the XKCD comic strip}
+\item{num}{Number of the XKCD comic strip}
 \item{link}{}
-\item{year}{}
+\item{year}{Year of publication}
 \item{safe_title}{}
 \item{transcript}{}
 \item{alt}{}

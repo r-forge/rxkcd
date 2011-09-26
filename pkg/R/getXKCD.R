@@ -23,7 +23,7 @@ xkcd.env <- new.env()
   assign("xkcd.data", read.xkcd(), envir = xkcd.env)
 }
 
-searchXKCD<- function(which="significant", xkcd.data=NULL){
+searchXKCD<- function(which="significant", xkcd.data = NULL){
 	if(is.null(xkcd.data))
 		xkcd.data <- get("xkcd.data", envir = xkcd.env)
 		if(is.character(which)) {
@@ -36,7 +36,7 @@ searchXKCD<- function(which="significant", xkcd.data=NULL){
 	return(out)	
 }
 
-getXKCD <- function(which="current", display=TRUE, html=FALSE, saveImg=FALSE) {
+getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = FALSE) {
 	if (which=="current") xkcd <- fromJSON("http://xkcd.com/info.0.json")
 	else if(which=="random"|which=="") {
 		current <- fromJSON("http://xkcd.com/info.0.json")

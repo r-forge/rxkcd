@@ -5,7 +5,7 @@
 This function use grep to inspenct the title and trascript for all the occurrences of a specified string and return a data.frame with both the number and the title of the XKCD comic strips .
 }
 \usage{
-searchXKCD(which = "significant", xkcd.data=NULL)
+searchXKCD(which = "significant", xkcd.data = NULL)
 }
 \arguments{
   \item{which}{ string }
