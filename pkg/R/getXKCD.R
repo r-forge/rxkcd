@@ -54,7 +54,7 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 		else if(grepl(".jpg",xkcd["img"][[1]])){
 			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
 			xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
-		} else stop("Unsupported image format!")
+		} else stop("Unsupported image format! Try html = TRUE")
 		if(display) {
 			max.dim = max(dim(xkcd.img))
 			plot(1:max.dim, type="n", axes=F, xaxt="n",yaxt="n",xlab="",ylab="")
