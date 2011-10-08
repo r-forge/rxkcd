@@ -38,5 +38,5 @@ http://xkcd.com/license.html
 \seealso{
 }
 \examples{
-current <- getXKCD("current", display=FALSE)
+current <- getXKCD(882, display=FALSE)
 }
