@@ -23,6 +23,28 @@ xkcd.env <- new.env()
   assign("xkcd.data", read.xkcd(), envir = xkcd.env)
 }
 
+#' Search your favorite XKCD comic strip by title/trascript
+#'
+#' This function use grep to inspect the title and trascript for all the occurrences of a specified string and return a data.frame with both the number and the title of the XKCD comic strips.
+#'
+#' @param which string.
+#' @param xkcd.data A character string giving a xkcd file in csv format. By default the csv file in the data directory of the xkcd package are used.
+#'
+#' @return a data.frame containing the following fields: \itemize{
+#' \item num The num of the XKCD comic strip
+#' \item title The title of the XKCD comic strip
+#' }
+#'
+#' @references http://xkcd.com/license.html
+#'
+#' @export
+#'
+#' @examples
+#'
+#' library("RXKCD")
+#' searchXKCD(which="significant") 
+#' searchXKCD(which="someone is wrong")
+#'
 searchXKCD<- function(which="significant", xkcd.data = NULL){
 	if(is.null(xkcd.data))
 		xkcd.data <- get("xkcd.data", envir = xkcd.env)
@@ -35,7 +57,38 @@ searchXKCD<- function(which="significant", xkcd.data = NULL){
   out <- data.frame(num=xkcd.data[which.all, "num"], title=xkcd.data[which.all, "title"])
 	return(out)	
 }
-
+#'
+#' Display your favourite XKCD comic in R
+#'
+#' This function fetches a XKCD comic strip (randomly or by number) and displays it on screen.
+#'
+#' @param which string: either "current" or "random"; or a number indicating the specific strip.
+#' @param display  logical; TRUE (default) if you like to display the strip on the screen
+#' @param html logical; TRUE if you like to open the XKCD web page for the selected comic in your browser: if TRUE it sets display and saveImg arguments to FALSE. Default FALSE
+#' @param saveImg logical; TRUE if you want to save image in the current directory. Default FALSE
+#'
+#' @return a list containing the following fields: \itemize{
+#' \item imgURL of the XKCD comic strip image (png)
+#' \item title Title of the XKCD comic strip
+#' \item month
+#' \item numNumber of the XKCD comic strip
+#' \item link
+#' \item year Year of publication
+#' \item safe_title
+#' \item transcript
+#' \item alt
+#' \item day
+#' }
+#'
+#' @references http://xkcd.com/license.html
+#'
+#' @export
+#'
+#' @examples
+#'
+#' library("RXKCD")
+#' significant <- getXKCD(882, display=FALSE)
+#'
 getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = FALSE) {
 	if (which=="current") xkcd <- fromJSON("http://xkcd.com/info.0.json")
 	else if(which=="random"|which=="") {
