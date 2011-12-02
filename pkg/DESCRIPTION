@@ -14,7 +14,8 @@ Depends:
     png,
     ReadImages
 Imports:
-    utils
+    utils,
+    plyr
 License: GPL-2
 LazyLoad: yes
 Collate:

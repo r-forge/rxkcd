@@ -1,3 +1,3 @@
-if(getRversion() >= "2.5.0") importFrom("utils", "read.csv")
-export(getXKCD, searchXKCD)
-
+importFrom("utils", "read.csv")
+importFrom("plyr", "ldply")
+export(saveConfig, updateConfig, getXKCD, searchXKCD)

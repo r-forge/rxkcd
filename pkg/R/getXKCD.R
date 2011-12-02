@@ -20,9 +20,58 @@ read.xkcd <- function(file = NULL)
 xkcd.env <- new.env()
 
 .onLoad <- function(lib, pkg) {
-  assign("xkcd.data", read.xkcd(), envir = xkcd.env)
+	home <- Sys.getenv("HOME") # user's home directory
+	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) {
+		load( paste(home, ".Rconfig/rxkcd.rda", sep="/") )
+		assign("xkcd.data", xkcd.df, envir = xkcd.env)
+	} else  assign("xkcd.data", read.xkcd(), envir = xkcd.env)
 }
 
+#'
+#' Update the XKCD database saved in the user directory
+#'
+#' This function update the local version of the XKCD database used by searchXKCD
+#'
+#' @references http://xkcd.com/license.html
+#'
+#' @export
+#'
+updateConfig <- function(){
+	home <- Sys.getenv("HOME") # user's home directory
+	if(!file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) stop("Use saveConfig() to save your xkcd database locally!")
+	else load( paste(home, ".Rconfig/rxkcd.rda", sep="/") )
+	from <- dim(xkcd.df)[[1]]
+	current <- getXKCD("current", display=F)
+	if ( current$num == xkcd.df$id[dim(xkcd.df)[[1]]] ) stop("Your local xkcd is already updated!")
+	tmp <-list()
+	for( i in c((from+1):(current$num)) ) tmp[[i]] <- getXKCD(i, display=F)
+	xkcd2add <- data.frame( do.call(rbind,tmp) )
+	xkcd2add <- data.frame(apply(xkcd2add ,2, ldply, as.vector))
+	xkcd2add <- cbind(xkcd2add[, 4], xkcd2add)
+	colnames(xkcd2add) <- colnames(xkcd.df)
+	xkcd.updated <- rbind(xkcd.df, xkcd2add)
+	xkcd.df <- xkcd.updated
+	save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
+}
+#'
+#' Save XKCD database info into a file in the user directory
+#'
+#' This function saves the xkcd database as a file in the user's home directory
+#'
+#' @references http://xkcd.com/license.html
+#'
+#' @export
+#'
+saveConfig <- function(){
+	home <- Sys.getenv("HOME") # home dir of the user
+	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) stop("Use updateConfig() for updating your local xkcd database")
+	else {
+		dir.create( paste(home, ".Rconfig", sep="/") )
+		xkcd.df <- read.xkcd()
+		save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
+	}
+}
+#'
 #' Search your favorite XKCD comic strip by title/trascript
 #'
 #' This function use grep to inspect the title and trascript for all the occurrences of a specified string and return a data.frame with both the number and the title of the XKCD comic strips.
@@ -46,6 +95,7 @@ xkcd.env <- new.env()
 #' searchXKCD(which="someone is wrong")
 #'
 searchXKCD<- function(which="significant", xkcd.data = NULL){
+	.onLoad()
 	if(is.null(xkcd.data))
 		xkcd.data <- get("xkcd.data", envir = xkcd.env)
 		if(is.character(which)) {
@@ -54,7 +104,7 @@ searchXKCD<- function(which="significant", xkcd.data = NULL){
 		which.tr <- grep(which, xkcd.data["transcript"][[1]], ignore.case =TRUE, useBytes = TRUE)
 		which.all <- unique(c(which.tr, which.tt))
 		} 
-  out <- data.frame(num=xkcd.data[which.all, "num"], title=xkcd.data[which.all, "title"])
+	out <- data.frame(num=xkcd.data[which.all, "num"], title=xkcd.data[which.all, "title"])
 	return(out)	
 }
 #'
@@ -64,7 +114,8 @@ searchXKCD<- function(which="significant", xkcd.data = NULL){
 #'
 #' @param which string: either "current" or "random"; or a number indicating the specific strip.
 #' @param display  logical; TRUE (default) if you like to display the strip on the screen
-#' @param html logical; TRUE if you like to open the XKCD web page for the selected comic in your browser: if TRUE it sets display and saveImg arguments to FALSE. Default FALSE
+#' @param html logical; TRUE if you like to open the XKCD web page for the selected comic in your browser: 
+#' if TRUE it sets display and saveImg arguments to FALSE. Default FALSE
 #' @param saveImg logical; TRUE if you want to save image in the current directory. Default FALSE
 #'
 #' @return a list containing the following fields: \itemize{
