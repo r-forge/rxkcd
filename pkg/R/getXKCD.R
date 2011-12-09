@@ -150,7 +150,8 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 	else xkcd <- fromJSON(paste("http://xkcd.com/",which,"/info.0.json",sep=""))
 	
 	if(html) browseURL( paste("http://xkcd.com/", as.numeric(xkcd["num"][[1]]),sep="") ) 
-	else {
+	
+	if (display|saveImg) {
 		if(grepl(".png",xkcd["img"][[1]])){
 			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.png",sep="/"))
 			xkcd.img <- readPNG( paste(tempdir(),"xkcd.png",sep="/") )
@@ -159,11 +160,13 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
 			xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
 		} else stop("Unsupported image format! Try html = TRUE")
-		if(display) {
+		# show the image if the format is supported
+		if(display){
 			max.dim = max(dim(xkcd.img))
 			plot(1:max.dim, type="n", axes=F, xaxt="n",yaxt="n",xlab="",ylab="")
 			rasterImage(xkcd.img, xleft=0, ybottom=0, xright=dim(xkcd.img)[[2]], ytop=dim(xkcd.img)[[1]])
 		}
+		# save the image
 		if(saveImg) writePNG( image=xkcd.img, target=paste(xkcd$title,".png",sep="") )
 	}
 	return(xkcd)
