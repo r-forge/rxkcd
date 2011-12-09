@@ -149,7 +149,10 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 	} 
 	else xkcd <- fromJSON(paste("http://xkcd.com/",which,"/info.0.json",sep=""))
 	
-	if(html) browseURL( paste("http://xkcd.com/", as.numeric(xkcd["num"][[1]]),sep="") ) 
+	if(html) {
+		display= FALSE
+		browseURL( paste("http://xkcd.com/", as.numeric(xkcd["num"][[1]]),sep="") ) 
+	}
 	
 	if (display|saveImg) {
 		if(grepl(".png",xkcd["img"][[1]])){
