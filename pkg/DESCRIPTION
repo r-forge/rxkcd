@@ -1,7 +1,7 @@
 Package: RXKCD
 Type: Package
 Title: Get XKCD comic from R
-Version: 1.6
+Version: 1.7
 Date: 2011-07-31
 Author: Paolo Sonego <paolo.sonego@gmail.com>
 Maintainer: Paolo Sonego <paolo.sonego@gmail.com>

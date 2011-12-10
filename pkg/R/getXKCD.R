@@ -1,21 +1,3 @@
-read.xkcd <- function(file = NULL)
-{
-  if(!is.null(file) && file.exists(file)) {
-    xkcd <- file
-  } else {
-    path <- system.file("xkcd", package = "RXKCD")
-    datafiles <- list.files(path)
-    if(!is.null(file) && file.exists(file.path(path, file))) {
-      xkcd <- file.path(path, file)
-    } else {
-      if(!is.null(file)) stop("sorry, ", sQuote(file), " not found")
-      file <- datafiles
-      xkcd <- file.path(path, file)
-    }
-  }
-  out <-read.csv(xkcd)
-  return(out)
-}
 
 xkcd.env <- new.env()
 
@@ -24,9 +6,13 @@ xkcd.env <- new.env()
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) {
 		load( paste(home, ".Rconfig/rxkcd.rda", sep="/") )
 		assign("xkcd.data", xkcd.df, envir = xkcd.env)
-	} else  assign("xkcd.data", read.xkcd(), envir = xkcd.env)
+	} else {
+		path <- system.file("xkcd", package = "RXKCD")
+		xkcd <- file.path(path, list.files(path))
+		load( xkcd )
+		assign("xkcd.data", xkcd.df, envir = xkcd.env)
+	}
 }
-
 #'
 #' Update the XKCD database saved in the user directory
 #'
@@ -67,7 +53,9 @@ saveConfig <- function(){
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) stop("Use updateConfig() for updating your local xkcd database")
 	else {
 		dir.create( paste(home, ".Rconfig", sep="/") )
-		xkcd.df <- read.xkcd()
+		path <- system.file("xkcd", package = "RXKCD")
+		xkcd <- file.path(path, list.files(path))
+		load( xkcd )
 		save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
 	}
 }
@@ -94,7 +82,7 @@ saveConfig <- function(){
 #' searchXKCD(which="significant") 
 #' searchXKCD(which="someone is wrong")
 #'
-searchXKCD<- function(which="significant", xkcd.data = NULL){
+searchXKCD <- function(which="significant", xkcd.data = NULL){
 	.onLoad()
 	if(is.null(xkcd.data))
 		xkcd.data <- get("xkcd.data", envir = xkcd.env)
@@ -148,12 +136,11 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 		xkcd <- fromJSON(paste("http://xkcd.com/",num,"/info.0.json",sep=""))
 	} 
 	else xkcd <- fromJSON(paste("http://xkcd.com/",which,"/info.0.json",sep=""))
-	
+	class(xkcd) <- "rxkcd"	
 	if(html) {
 		display= FALSE
 		browseURL( paste("http://xkcd.com/", as.numeric(xkcd["num"][[1]]),sep="") ) 
 	}
-	
 	if (display|saveImg) {
 		if(grepl(".png",xkcd["img"][[1]])){
 			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.png",sep="/"))
@@ -173,4 +160,13 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 		if(saveImg) writePNG( image=xkcd.img, target=paste(xkcd$title,".png",sep="") )
 	}
 	return(xkcd)
+}
+
+print.rxkcd <- function(xkcd){
+	cat("image.url = ", xkcd$img, "\n", sep="")
+	cat("title =  ", xkcd$title,"\n", sep="")
+	cat("num = ", xkcd$num,"\n", sep="")
+	cat("year = ", xkcd$year,"\n", sep="")
+	cat("transcript = ",xkcd$transcript,"\n", sep="")
+	cat("alt = ", xkcd$alt,"\n", sep="")
 }
