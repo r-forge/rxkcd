@@ -1,16 +1,22 @@
 
-xkcd.env <- new.env()
+xkcd.env <- new.env(hash=TRUE, parent=emptyenv())
+
+# xkcd.env <- new.env() # it works
 
 .onLoad <- function(lib, pkg) {
+	xkcd.df <- NULL #  Thanks to Duncan Murdoch
 	home <- Sys.getenv("HOME") # user's home directory
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) {
 		load( paste(home, ".Rconfig/rxkcd.rda", sep="/") )
-		assign("xkcd.data", xkcd.df, envir = xkcd.env)
+		# assign("xkcd.data", xkcd.df, envir = xkcd.env)
+		xkcd.env[["xkcd.data"]] <- xkcd.df
 	} else {
 		path <- system.file("xkcd", package = "RXKCD")
 		xkcd <- file.path(path, list.files(path))
-		load( xkcd )
-		assign("xkcd.data", xkcd.df, envir = xkcd.env)
+		load( xkcd, envir = xkcd.env )
+		# load( xkcd )
+		# assign("xkcd.data", xkcd.df, envir = xkcd.env)
+		xkcd.env[["xkcd.data"]] <- xkcd.df
 	}
 }
 #'
@@ -49,13 +55,15 @@ updateConfig <- function(){
 #' @export
 #'
 saveConfig <- function(){
+	xkcd.df <- NULL # to satisfy codetools
 	home <- Sys.getenv("HOME") # home dir of the user
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) stop("Use updateConfig() for updating your local xkcd database")
 	else {
 		dir.create( paste(home, ".Rconfig", sep="/") )
 		path <- system.file("xkcd", package = "RXKCD")
 		xkcd <- file.path(path, list.files(path))
-		load( xkcd )
+		load( xkcd, envir = xkcd.env )
+		# load( xkcd )
 		save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
 	}
 }
@@ -86,6 +94,7 @@ searchXKCD <- function(which="significant", xkcd.data = NULL){
 	.onLoad()
 	if(is.null(xkcd.data))
 		xkcd.data <- get("xkcd.data", envir = xkcd.env)
+		# xkcd.data <- get("xkcd.df", envir = xkcd.env)
 		if(is.character(which)) {
 		  if(length(which) > 1) which <- sample(which)
 		which.tt <- grep(which, xkcd.data["title"][[1]], ignore.case = TRUE, useBytes = TRUE)
@@ -162,11 +171,11 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 	return(xkcd)
 }
 
-print.rxkcd <- function(xkcd){
-	cat("image.url = ", xkcd$img, "\n", sep="")
-	cat("title =  ", xkcd$title,"\n", sep="")
-	cat("num = ", xkcd$num,"\n", sep="")
-	cat("year = ", xkcd$year,"\n", sep="")
-	cat("transcript = ",xkcd$transcript,"\n", sep="")
-	cat("alt = ", xkcd$alt,"\n", sep="")
+print.rxkcd <- function(x, ...){
+	cat("image.url = ", x$img, "\n", sep="")
+	cat("title =  ", x$title, "\n", sep="")
+	cat("num = ", x$num, "\n", sep="")
+	cat("year = ", x$year, "\n", sep="")
+	cat("transcript = ", x$transcript,"\n", sep="")
+	cat("alt = ", x$alt, "\n", sep="")
 }
