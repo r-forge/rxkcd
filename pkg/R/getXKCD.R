@@ -5,7 +5,7 @@ xkcd.env <- new.env(hash=TRUE, parent=emptyenv())
 
 .onLoad <- function(libname, pkgname) {
 	xkcd.df <- NULL #  Thanks to Duncan Murdoch
-	home <- q("HOME") # user's home directory
+	home <- Sys.getenv("HOME") # user's home directory
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) {
 		load( paste(home, ".Rconfig/rxkcd.rda", sep="/") )
 		xkcd.env[["xkcd.data"]] <- xkcd.df
