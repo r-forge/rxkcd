@@ -3,7 +3,7 @@ xkcd.env <- new.env(hash=TRUE, parent=emptyenv())
 
 # xkcd.env <- new.env() # it works
 
-.onLoad <- function(libname, pkgname) {
+.onLoad <- function(lib, pkg) {
 	xkcd.df <- NULL #  Thanks to Duncan Murdoch
 	home <- Sys.getenv("HOME") # user's home directory
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) {
@@ -11,7 +11,7 @@ xkcd.env <- new.env(hash=TRUE, parent=emptyenv())
 		xkcd.env[["xkcd.data"]] <- xkcd.df
 	} else {
 		# path <- system.file("xkcd", package = "RXKCD", lib.loc=lib)
-		path <- system.file("xkcd", package = pkgname, lib.loc=libname) # fix requested by Brian Ripley
+		path <- system.file("xkcd", package = "RXKCD", lib.loc=lib) # fix requested by Brian Ripley
 		xkcd <- file.path(path, list.files(path))
 		load( xkcd, envir = xkcd.env )
 		xkcd.env[["xkcd.data"]] <- xkcd.df
