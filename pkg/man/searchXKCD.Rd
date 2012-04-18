@@ -23,9 +23,11 @@
   XKCD comic strips.
 }
 \examples{
+\dontrun{
 library("RXKCD")
 searchXKCD(which="significant")
 searchXKCD(which="someone is wrong")
+}
 }
 \references{
   http://xkcd.com/license.html

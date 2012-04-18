@@ -83,10 +83,10 @@ saveConfig <- function(){
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' library("RXKCD")
 #' searchXKCD(which="significant") 
-#' searchXKCD(which="someone is wrong")
+#' searchXKCD(which="someone is wrong") }
 #'
 searchXKCD <- function(which="significant", xkcd.data = NULL){
 	.onLoad()
