@@ -20,6 +20,7 @@ read.xkcd <- function(file = NULL)
 xkcd.env <- new.env()
 
 .onLoad <- function(lib, pkg) {
+	xkcd.df <- NULL #  Thanks to Duncan Murdoch
 	home <- Sys.getenv("HOME") # user's home directory
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) {
 		load( paste(home, ".Rconfig/rxkcd.rda", sep="/") )
