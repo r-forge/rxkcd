@@ -1,9 +1,9 @@
-read.xkcd <- function(file = NULL)
+read.xkcd <- function(lib = NULL, file = NULL)
 {
   if(!is.null(file) && file.exists(file)) {
     xkcd <- file
   } else {
-    path <- system.file("xkcd", package = "RXKCD")
+    path <- system.file("xkcd", package = "RXKCD", lib.loc=lib) # fix requested by Brian Ripley
     datafiles <- list.files(path)
     if(!is.null(file) && file.exists(file.path(path, file))) {
       xkcd <- file.path(path, file)
@@ -100,7 +100,7 @@ saveConfig <- function(){
 searchXKCD <- function(which="significant", xkcd.data = NULL){
 	.onLoad()
 	if(is.null(xkcd.data))
-		xkcd.data <- get("xkcd.df", envir = xkcd.env)
+		xkcd.data <- get("xkcd.data", envir = xkcd.env)
 		if(is.character(which)) {
 		  if(length(which) > 1) which <- sample(which)
 		which.tt <- grep(which, xkcd.data["title"][[1]], ignore.case = TRUE, useBytes = TRUE)
