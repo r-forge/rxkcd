@@ -17,6 +17,6 @@ Imports:
     utils,
     plyr
 License: GPL-2
-LazyLoad: true
+LazyLoad: yes
 Collate:
     'getXKCD.R'

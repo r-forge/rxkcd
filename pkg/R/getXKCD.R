@@ -66,14 +66,11 @@ updateConfig <- function(){
 #' @export
 #'
 saveConfig <- function(){
-	xkcd.df <- NULL # to satisfy codetools
 	home <- Sys.getenv("HOME") # home dir of the user
 	if( file.exists( paste(home, ".Rconfig/rxkcd.rda", sep="/") ) ) stop("Use updateConfig() for updating your local xkcd database")
 	else {
 		dir.create( paste(home, ".Rconfig", sep="/") )
-		path <- system.file("xkcd", package = "RXKCD")
-		xkcd <- file.path(path, list.files(path))
-		load( xkcd, envir = xkcd.env )
+		xkcd.df <- read.xkcd()
 		save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
 	}
 }
