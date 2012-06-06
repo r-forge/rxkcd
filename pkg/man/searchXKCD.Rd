@@ -2,14 +2,10 @@
 \alias{searchXKCD}
 \title{Search your favorite XKCD comic strip by title/trascript}
 \usage{
-  searchXKCD(which = "significant", xkcd.data = NULL)
+  searchXKCD(which = "significant")
 }
 \arguments{
   \item{which}{string.}
-
-  \item{xkcd.data}{A character string giving a xkcd file in
-  csv format. By default the csv file in the data directory
-  of the xkcd package are used.}
 }
 \value{
   a data.frame containing the following fields: \itemize{
