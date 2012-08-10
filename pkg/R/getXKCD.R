@@ -32,16 +32,14 @@ updateConfig <- function(){
 	from <- dim(xkcd.df)[[1]]
 	current <- getXKCD("current", display=F)
 	if ( current$num == xkcd.df$id[dim(xkcd.df)[[1]]] ) stop("Your local xkcd is already updated!")
-	tmp <-list()
-	for( i in c((from+1):(current$num)) ) tmp[[i]] <- getXKCD(i, display=F)
-	xkcd2add <- data.frame( do.call(rbind,tmp) )
-	xkcd2add <- cbind("id"=unlist(xkcd2add[["num"]]), xkcd2add)
-	junk=colnames(xkcd2add)
-	xkcd2add <- data.frame(apply(xkcd2add ,2, ldply, as.vector)) # columns converted from list to vector
-	colnames(xkcd2add) <- junk
-	xkcd.tmp <- data.frame(apply(xkcd.df ,2, ldply, as.vector))
-	colnames(xkcd.tmp) <- colnames(xkcd.df)
-	xkcd.updated <- rbind(xkcd.tmp, subset(xkcd2add,select=colnames(xkcd.df)))
+	tmp <- NULL
+	for( i in c((from+1):(current$num)) ){
+		if (is.null(tmp)) tmp <- getXKCD(i, display=F)
+		else tmp <- rbind(tmp, getXKCD(i, display=F))
+	}
+	suppressWarnings(tmp <- data.frame(tmp))
+	row.names(tmp) <- tmp$num
+	xkcd.updated <- rbind(xkcd.df, tmp)
 	xkcd.df <- xkcd.updated
 	save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
 }
