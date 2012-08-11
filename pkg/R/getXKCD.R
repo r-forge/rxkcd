@@ -33,12 +33,6 @@ updateConfig <- function(){
 	from <- dim(xkcd.df)[[1]]
 	current <- getXKCD("current", display=F)
 	if ( current$num == xkcd.df$id[dim(xkcd.df)[[1]]] ) stop("Your local xkcd is already updated!")
-	# tmp <-list()
-	# for( i in c((from+1):(current$num)) ) tmp[[i]] <- getXKCD(i, display=F)
-	# xkcd2add <- data.frame( do.call(rbind,tmp) )
-	# xkcd2add <- data.frame( do.call(rbind,tmp) )
-	# row.names(xkcd2add) <- xkcd2add$num
-	# xkcd2add <- data.frame(apply(xkcd2add ,2,ldply,as.vector))
 	tmp <- NULL
 	for( i in c((from+1):(current$num)) ){
 		if (is.null(tmp)) tmp <- getXKCD(i, display=F)
@@ -46,8 +40,6 @@ updateConfig <- function(){
 	}
 	suppressWarnings(tmp <- data.frame(tmp))
 	row.names(tmp) <- tmp$num
-	# xkcd2add <- cbind("id"=unlist(tmp[["num"]]), xkcd2add)
-	# xkcd2add <- cbind("id"=unlist(tmp[["num"]]), tmp)
 	xkcd2add <- cbind( 
 	"id"=unlist(tmp[["num"]]),
 	"img"=unlist(tmp[["img"]]),
@@ -64,11 +56,9 @@ updateConfig <- function(){
 	)
 	suppressWarnings(xkcd2add <- data.frame(xkcd2add))
 	row.names(xkcd2add) <- xkcd2add$num
-	# xkcd2add <- xkcd2add[,colnames(xkcd.df)]
 	xkcd.updated <- rbind(xkcd.df,xkcd2add)
-	# xkcd2add <- apply(tmp,2,unlist)
 	xkcd.df <- xkcd.updated
-	# write.csv(xkcd.updated,file="xkcd_new.csv",row.names=F)
+	# write.csv(xkcd.updated,file="xkcd.csv",row.names=F)
 	save( xkcd.df, file=paste(home, ".Rconfig/rxkcd.rda", sep="/") , compress=TRUE)
 }
 #'
