@@ -171,7 +171,7 @@ getXKCD <- function(which = "current", display = TRUE, html = FALSE, saveImg = F
 		}
 		else if(grepl(".jpg",xkcd["img"][[1]])){
 			download.file(url=xkcd["img"][[1]], quiet=TRUE, mode="wb", destfile=paste(tempdir(),"xkcd.jpg",sep="/"))
-			xkcd.img <- read.jpeg( paste(tempdir(),"xkcd.jpg",sep="/") )
+			xkcd.img <- readJPEG( paste(tempdir(),"xkcd.jpg",sep="/") )
 		} else stop("Unsupported image format! Try html = TRUE")
 		# show the image if the format is supported
 		if(display){
